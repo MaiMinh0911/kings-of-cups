@@ -6,98 +6,87 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ========== BASE RESET ========== */
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
+
 body {
   margin: 0;
   min-height: 100vh;
   background:
     radial-gradient(circle at center, rgba(255,215,0,0.08), transparent 60%),
     radial-gradient(circle at top, #0e4d3c, #02150f);
-  font-family: "Trebuchet MS", system-ui, sans-serif;
-  color: #fff;
+  font-family: Georgia, serif;
+  color: white;
   text-align: center;
-  overflow-x: hidden;
 }
 
-/* ========== SETUP SCREEN ========== */
+/* ===== SETUP ===== */
 #setup {
   padding: 40px 20px;
 }
 #setup h1 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
+  font-size: 2.8rem;
 }
-#player-input {
+input {
+  font-size: 1.3rem;
   padding: 12px;
-  font-size: 1.2rem;
   border-radius: 10px;
   border: none;
 }
-#add-player, #start-game {
-  margin: 10px;
-  padding: 14px 28px;
-  font-size: 1.1rem;
+button {
+  margin: 12px;
+  padding: 16px 36px;
+  font-size: 1.3rem;
   border-radius: 999px;
   border: none;
   background: gold;
   font-weight: bold;
 }
-#player-list {
-  margin-top: 20px;
-  font-size: 1.3rem;
-}
 
-/* ========== GAME SCREEN ========== */
-#game {
-  display: none;
-}
+/* ===== GAME ===== */
+#game { display: none; }
 
-/* ========== ACTIVE RULES ========== */
+/* ===== ACTIVE RULES ===== */
 #active-rules {
   position: fixed;
   top: 14px;
   right: 14px;
+  font-size: 1.2rem;
   text-align: right;
-  font-size: 1.1rem;
-  line-height: 1.5;
 }
 .active-rule {
   color: gold;
-  animation: pulse 1.4s infinite;
+  animation: pulse 1.5s infinite;
 }
 @keyframes pulse {
-  0%,100% { opacity: 1; }
   50% { opacity: 0.6; }
 }
 
-/* ========== TABLE & PLAYERS ========== */
+/* ===== TABLE ===== */
 #table {
   position: relative;
-  width: 100%;
-  max-width: 420px;
+  width: 420px;
   height: 420px;
   margin: 60px auto 20px;
   border-radius: 50%;
   background: radial-gradient(circle, #0b3d2e, #031a13);
-  box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
 }
+
+/* ===== PLAYERS ===== */
 .player {
   position: absolute;
   transform: translate(-50%, -50%);
+  padding: 6px 14px;
+  background: rgba(0,0,0,0.45);
+  border-radius: 16px;
   font-size: 1.2rem;
-  padding: 6px 10px;
-  border-radius: 12px;
-  background: rgba(0,0,0,0.4);
 }
 .player.active {
   outline: 2px solid gold;
-  box-shadow: 0 0 10px gold;
+  box-shadow: 0 0 14px gold;
 }
 
-/* ========== CARD ========== */
+/* ===== CARD ===== */
 #card {
   position: absolute;
   top: 50%;
@@ -105,172 +94,201 @@ body {
   width: 160px;
   height: 230px;
   transform: translate(-50%, -50%);
-  background: linear-gradient(145deg, #b11226, #7e0b1a);
+  background: #fdfdfd;
   border-radius: 18px;
-  font-size: 4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   box-shadow: 0 18px 40px rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px;
+  font-size: 2.4rem;
+  color: black;
   transition: transform 0.6s;
 }
 #card.flip {
   transform: translate(-50%, -50%) rotateY(180deg);
 }
+.rank {
+  font-weight: bold;
+}
+.suit {
+  font-size: 3.6rem;
+  align-self: center;
+}
+.red { color: #b11226; }
 
-/* ========== RULE TEXT ========== */
+/* ===== RULE TEXT ===== */
 #rule-text {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   padding: 0 20px;
-  min-height: 100px;
+  min-height: 120px;
 }
 
-/* ========== BUTTON ========== */
-#draw-btn {
-  margin: 20px;
-  padding: 18px 40px;
-  font-size: 1.4rem;
-  border-radius: 999px;
-  border: none;
-  background: linear-gradient(145deg, gold, #c9a300);
-  font-weight: bold;
+/* ===== DECK COUNTER ===== */
+#deck-count {
+  font-size: 1.1rem;
+  opacity: 0.8;
 }
 </style>
 </head>
 
 <body>
 
-<!-- ========== SETUP ========== -->
 <div id="setup">
   <h1>🎄 Kings of Cups</h1>
   <input id="player-input" placeholder="Player name">
   <br>
-  <button id="add-player">Add Player</button>
-  <button id="start-game">Start Game</button>
+  <button onclick="addPlayer()">Add Player</button>
+  <button onclick="startGame()">Start Game</button>
   <div id="player-list"></div>
 </div>
 
-<!-- ========== GAME ========== -->
 <div id="game">
   <div id="active-rules"></div>
 
   <div id="table">
-    <div id="card">🎄</div>
+    <div id="card">
+      <div class="rank">🎄</div>
+      <div class="suit">♠</div>
+      <div class="rank">🎄</div>
+    </div>
   </div>
 
   <div id="rule-text">Tap Deal Card</div>
-  <button id="draw-btn">Deal Card</button>
+  <button onclick="drawCard()">Deal Card</button>
+  <div id="deck-count"></div>
 </div>
 
 <script>
-/* ===== DATA ===== */
-const cards = [
-  { value: "Ace", rule: "🎅 Person to your right sings Jingle Bells. You drink until they stop." },
-  { value: "2", rule: "👉 You choose someone to drink" },
-  { value: "3", rule: "🍺 You drink" },
-  { value: "4", rule: "🌙 Silent Night — No talking until NEXT 4", type: "silent" },
-  { value: "5", rule: "👨 Guys drink" },
-  { value: "6", rule: "👩 Girls drink" },
-  { value: "7", rule: "🎄 Christmas Spirit — Laugh = drink", type: "spirit" },
-  { value: "8", rule: "🤝 Mate — Pick a buddy" },
-  { value: "9", rule: "🎤 Rhyme" },
-  { value: "10", rule: "📚 Categories" },
-  { value: "Jack", rule: "🎁 Naughty or Nice — Nice: give 2 | Naughty: drink 2" },
-  { value: "Queen", rule: "🎅 Santa’s Helper — Drinks when you drink" },
-  { value: "King", rule: "🥂 Santa’s Cup — Pour in. Last King drinks + story" }
+/* ===== GAME DATA ===== */
+const suits = [
+  { s: "♠", c: "black" },
+  { s: "♣", c: "black" },
+  { s: "♥", c: "red" },
+  { s: "♦", c: "red" }
 ];
 
+const ranks = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+
+const rules = {
+  A: "🎅 Person to your right sings Jingle Bells. You drink until they stop.",
+  2: "👉 Choose someone to drink",
+  3: "🍺 You drink",
+  4: "🌙 Silent Night — No talking until NEXT 4",
+  5: "👨 Guys drink",
+  6: "👩 Girls drink",
+  7: "🎄 Christmas Spirit — Laugh = drink",
+  8: "🤝 Mate — Pick a buddy",
+  9: "🎤 Rhyme",
+  10: "📚 Categories",
+  J: "🎁 Naughty or Nice — Nice: give 2 | Naughty: drink 2",
+  Q: "🎅 Santa’s Helper — Drinks when you drink",
+  K: "🥂 Santa’s Cup — Pour in. Last King drinks + story"
+};
+
+let deck = [];
 let players = [];
 let currentPlayer = 0;
 let silentNight = null;
 let christmasSpirit = null;
 
-/* ===== SETUP LOGIC ===== */
-const playerInput = document.getElementById("player-input");
-const playerList = document.getElementById("player-list");
+/* ===== SETUP ===== */
+function addPlayer() {
+  const input = document.getElementById("player-input");
+  if (!input.value.trim()) return;
+  players.push(input.value.trim());
+  input.value = "";
+  document.getElementById("player-list").innerHTML = players.join("<br>");
+}
 
-document.getElementById("add-player").onclick = () => {
-  if (playerInput.value.trim()) {
-    players.push(playerInput.value.trim());
-    playerInput.value = "";
-    renderPlayerList();
-  }
-};
-
-document.getElementById("start-game").onclick = () => {
+function startGame() {
   if (players.length < 2) return alert("Add at least 2 players");
   document.getElementById("setup").style.display = "none";
   document.getElementById("game").style.display = "block";
+  buildDeck();
   renderPlayers();
-  renderActiveRules();
-};
+  updateDeckCount();
+}
 
-function renderPlayerList() {
-  playerList.innerHTML = players.join("<br>");
+/* ===== DECK ===== */
+function buildDeck() {
+  deck = [];
+  for (let r of ranks) {
+    for (let s of suits) {
+      deck.push({ rank: r, suit: s });
+    }
+  }
+  shuffle(deck);
+}
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
 }
 
 /* ===== TABLE ===== */
 function renderPlayers() {
   const table = document.getElementById("table");
   table.querySelectorAll(".player").forEach(p => p.remove());
-
-  const radius = 170;
+  const r = 170;
   players.forEach((p, i) => {
-    const angle = (2 * Math.PI / players.length) * i;
-    const x = 210 + radius * Math.cos(angle);
-    const y = 210 + radius * Math.sin(angle);
-
+    const a = (2 * Math.PI / players.length) * i;
     const el = document.createElement("div");
     el.className = "player" + (i === currentPlayer ? " active" : "");
-    el.style.left = x + "px";
-    el.style.top = y + "px";
+    el.style.left = 210 + r * Math.cos(a) + "px";
+    el.style.top = 210 + r * Math.sin(a) + "px";
     el.innerText = p;
     table.appendChild(el);
   });
 }
 
-/* ===== GAME LOGIC ===== */
-document.getElementById("draw-btn").onclick = () => {
-  // Christmas Miracle
-  if (Math.random() < 1/15) {
-    showCard("🎁", "CHRISTMAS MIRACLE! Last to shout MERRY CHRISTMAS drinks!");
-    nextTurn();
-    return;
+/* ===== GAME ===== */
+function drawCard() {
+  if (deck.length === 0) {
+    buildDeck();
+    alert("Deck reshuffled!");
   }
 
-  const card = cards[Math.floor(Math.random() * cards.length)];
-  handleSpecial(card);
-  showCard(card.value, card.rule);
-  renderActiveRules();
-  nextTurn();
-};
+  const card = deck.pop();
 
-function handleSpecial(card) {
-  if (card.type === "silent") silentNight = silentNight === null ? players[currentPlayer] : null;
-  if (card.type === "spirit") christmasSpirit = christmasSpirit === null ? players[currentPlayer] : null;
+  if (card.rank === "4") silentNight = silentNight ? null : players[currentPlayer];
+  if (card.rank === "7") christmasSpirit = christmasSpirit ? null : players[currentPlayer];
+
+  showCard(card);
+  document.getElementById("rule-text").innerText = rules[card.rank];
+  renderActiveRules();
+  updateDeckCount();
+
+  currentPlayer = (currentPlayer + 1) % players.length;
+  renderPlayers();
 }
 
-function showCard(value, rule) {
-  const cardEl = document.getElementById("card");
-  cardEl.classList.add("flip");
+function showCard(card) {
+  const el = document.getElementById("card");
+  el.classList.add("flip");
   setTimeout(() => {
-    cardEl.innerText = value;
-    document.getElementById("rule-text").innerText = rule;
+    el.innerHTML = `
+      <div class="rank ${card.suit.c}">${card.rank}</div>
+      <div class="suit ${card.suit.c}">${card.suit.s}</div>
+      <div class="rank ${card.suit.c}">${card.rank}</div>
+    `;
   }, 300);
-  setTimeout(() => cardEl.classList.remove("flip"), 600);
+  setTimeout(() => el.classList.remove("flip"), 600);
 }
 
 function renderActiveRules() {
-  const rules = [];
-  if (silentNight) rules.push(`🌙 Silent Night — ${silentNight}`);
-  if (christmasSpirit) rules.push(`🎄 Christmas Spirit — ${christmasSpirit}`);
+  const rulesEl = [];
+  if (silentNight) rulesEl.push(`🌙 Silent Night — ${silentNight}`);
+  if (christmasSpirit) rulesEl.push(`🎄 Christmas Spirit — ${christmasSpirit}`);
   document.getElementById("active-rules").innerHTML =
-    rules.map(r => `<div class="active-rule">${r}</div>`).join("");
+    rulesEl.map(r => `<div class="active-rule">${r}</div>`).join("");
 }
 
-function nextTurn() {
-  currentPlayer = (currentPlayer + 1) % players.length;
-  renderPlayers();
+function updateDeckCount() {
+  document.getElementById("deck-count").innerText =
+    `Cards left: ${deck.length}/52`;
 }
 </script>
 
