@@ -2,224 +2,275 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Kings of Cups – Christmas Edition</title>
+<title>Kings of Cups – Christmas Casino</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ===== RESET ===== */
+/* ========== BASE RESET ========== */
 * {
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
 }
-
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at top, #0e4d3c, #02150f);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
-  color: white;
+  background:
+    radial-gradient(circle at center, rgba(255,215,0,0.08), transparent 60%),
+    radial-gradient(circle at top, #0e4d3c, #02150f);
+  font-family: "Trebuchet MS", system-ui, sans-serif;
+  color: #fff;
   text-align: center;
   overflow-x: hidden;
 }
 
-/* ===== SNOW EFFECT ===== */
-.snow::before,
-.snow::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image:
-    radial-gradient(2px 2px at 20px 30px, white 50%, transparent 51%),
-    radial-gradient(2px 2px at 120px 90px, white 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 220px 160px, white 50%, transparent 51%);
-  background-size: 300px 300px;
-  animation: snow 22s linear infinite;
-  opacity: 0.35;
-  pointer-events: none;
+/* ========== SETUP SCREEN ========== */
+#setup {
+  padding: 40px 20px;
+}
+#setup h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+#player-input {
+  padding: 12px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: none;
+}
+#add-player, #start-game {
+  margin: 10px;
+  padding: 14px 28px;
+  font-size: 1.1rem;
+  border-radius: 999px;
+  border: none;
+  background: gold;
+  font-weight: bold;
+}
+#player-list {
+  margin-top: 20px;
+  font-size: 1.3rem;
 }
 
-.snow::after {
-  animation-duration: 38s;
-  opacity: 0.18;
+/* ========== GAME SCREEN ========== */
+#game {
+  display: none;
 }
 
-@keyframes snow {
-  from { transform: translateY(-300px); }
-  to { transform: translateY(300px); }
-}
-
-/* ===== ACTIVE RULES PANEL ===== */
+/* ========== ACTIVE RULES ========== */
 #active-rules {
   position: fixed;
-  top: 12px;
-  right: 12px;
+  top: 14px;
+  right: 14px;
   text-align: right;
-  font-size: 0.85rem;
-  line-height: 1.4;
+  font-size: 1.1rem;
+  line-height: 1.5;
 }
-
-.rule-active {
+.active-rule {
   color: gold;
-  animation: pulse 1.5s infinite;
+  animation: pulse 1.4s infinite;
 }
-
 @keyframes pulse {
   0%,100% { opacity: 1; }
   50% { opacity: 0.6; }
 }
 
-/* ===== CARD AREA ===== */
-.card-area {
-  margin-top: 90px;
-  padding: 0 16px;
+/* ========== TABLE & PLAYERS ========== */
+#table {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  height: 420px;
+  margin: 60px auto 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #0b3d2e, #031a13);
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+}
+.player {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 1.2rem;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.4);
+}
+.player.active {
+  outline: 2px solid gold;
+  box-shadow: 0 0 10px gold;
 }
 
-.card {
-  width: 180px;
-  height: 260px;
-  margin: 0 auto;
+/* ========== CARD ========== */
+#card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 160px;
+  height: 230px;
+  transform: translate(-50%, -50%);
   background: linear-gradient(145deg, #b11226, #7e0b1a);
   border-radius: 18px;
+  font-size: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3.5rem;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.6);
-  transform-style: preserve-3d;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.7);
   transition: transform 0.6s;
 }
-
-.card.back {
-  background: linear-gradient(145deg, #0b3d2e, #06261d);
+#card.flip {
+  transform: translate(-50%, -50%) rotateY(180deg);
 }
 
-.card.flip {
-  transform: rotateY(180deg);
-}
-
+/* ========== RULE TEXT ========== */
 #rule-text {
-  margin-top: 24px;
-  font-size: 1.05rem;
-  min-height: 80px;
-  line-height: 1.4;
+  font-size: 1.4rem;
+  padding: 0 20px;
+  min-height: 100px;
 }
 
-/* ===== BUTTON ===== */
+/* ========== BUTTON ========== */
 #draw-btn {
-  margin: 32px auto;
-  padding: 16px 36px;
-  font-size: 1.2rem;
+  margin: 20px;
+  padding: 18px 40px;
+  font-size: 1.4rem;
   border-radius: 999px;
   border: none;
   background: linear-gradient(145deg, gold, #c9a300);
-  color: #1b1b1b;
   font-weight: bold;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-  cursor: pointer;
-}
-
-#draw-btn:active {
-  transform: scale(0.96);
 }
 </style>
 </head>
 
 <body>
 
-<div class="snow"></div>
-
-<div id="active-rules"></div>
-
-<div class="card-area">
-  <div id="card" class="card back">🎄</div>
-  <div id="rule-text">Tap to deal a card</div>
+<!-- ========== SETUP ========== -->
+<div id="setup">
+  <h1>🎄 Kings of Cups</h1>
+  <input id="player-input" placeholder="Player name">
+  <br>
+  <button id="add-player">Add Player</button>
+  <button id="start-game">Start Game</button>
+  <div id="player-list"></div>
 </div>
 
-<button id="draw-btn">Deal Card</button>
+<!-- ========== GAME ========== -->
+<div id="game">
+  <div id="active-rules"></div>
+
+  <div id="table">
+    <div id="card">🎄</div>
+  </div>
+
+  <div id="rule-text">Tap Deal Card</div>
+  <button id="draw-btn">Deal Card</button>
+</div>
 
 <script>
-/* ===== GAME DATA ===== */
+/* ===== DATA ===== */
 const cards = [
-  { value: "Ace", rule: "🎅 Jingle Bells Waterfall — Person to your right sings. You drink until they stop." },
-  { value: "2", rule: "👉 You — Choose someone to drink" },
-  { value: "3", rule: "🍺 Me — You drink" },
-  { value: "4", rule: "🌙 Silent Night — No talking until next 4", persistent: "silentNight" },
+  { value: "Ace", rule: "🎅 Person to your right sings Jingle Bells. You drink until they stop." },
+  { value: "2", rule: "👉 You choose someone to drink" },
+  { value: "3", rule: "🍺 You drink" },
+  { value: "4", rule: "🌙 Silent Night — No talking until NEXT 4", type: "silent" },
   { value: "5", rule: "👨 Guys drink" },
   { value: "6", rule: "👩 Girls drink" },
-  { value: "7", rule: "🎄 Christmas Spirit — Anyone who laughs drinks", persistent: "christmasSpirit" },
-  { value: "8", rule: "🤝 Mate — Pick a drinking buddy" },
+  { value: "7", rule: "🎄 Christmas Spirit — Laugh = drink", type: "spirit" },
+  { value: "8", rule: "🤝 Mate — Pick a buddy" },
   { value: "9", rule: "🎤 Rhyme" },
   { value: "10", rule: "📚 Categories" },
   { value: "Jack", rule: "🎁 Naughty or Nice — Nice: give 2 | Naughty: drink 2" },
-  { value: "Queen", rule: "🎅 Santa’s Helper — They drink when you drink", persistent: "santaHelper" },
-  { value: "King", rule: "🥂 Santa’s Cup — Pour in. Last King drinks + Christmas story", persistent: "king" }
+  { value: "Queen", rule: "🎅 Santa’s Helper — Drinks when you drink" },
+  { value: "King", rule: "🥂 Santa’s Cup — Pour in. Last King drinks + story" }
 ];
 
-/* ===== GAME STATE ===== */
-const state = {
-  silentNight: false,
-  christmasSpirit: false,
-  santaHelper: false,
-  kings: 0
+let players = [];
+let currentPlayer = 0;
+let silentNight = null;
+let christmasSpirit = null;
+
+/* ===== SETUP LOGIC ===== */
+const playerInput = document.getElementById("player-input");
+const playerList = document.getElementById("player-list");
+
+document.getElementById("add-player").onclick = () => {
+  if (playerInput.value.trim()) {
+    players.push(playerInput.value.trim());
+    playerInput.value = "";
+    renderPlayerList();
+  }
 };
 
-/* ===== ELEMENTS ===== */
-const cardEl = document.getElementById("card");
-const ruleEl = document.getElementById("rule-text");
-const activeRulesEl = document.getElementById("active-rules");
-const btn = document.getElementById("draw-btn");
+document.getElementById("start-game").onclick = () => {
+  if (players.length < 2) return alert("Add at least 2 players");
+  document.getElementById("setup").style.display = "none";
+  document.getElementById("game").style.display = "block";
+  renderPlayers();
+  renderActiveRules();
+};
 
-/* ===== EVENTS ===== */
-btn.addEventListener("click", drawCard);
+function renderPlayerList() {
+  playerList.innerHTML = players.join("<br>");
+}
 
-/* ===== FUNCTIONS ===== */
-function drawCard() {
+/* ===== TABLE ===== */
+function renderPlayers() {
+  const table = document.getElementById("table");
+  table.querySelectorAll(".player").forEach(p => p.remove());
 
-  // 🎁 Christmas Miracle (1 in 15)
-  if (Math.random() < 1 / 15) {
-    showCard("🎁", "CHRISTMAS MIRACLE! 🎄<br>Last to shout <b>“Merry Christmas!”</b> drinks!");
+  const radius = 170;
+  players.forEach((p, i) => {
+    const angle = (2 * Math.PI / players.length) * i;
+    const x = 210 + radius * Math.cos(angle);
+    const y = 210 + radius * Math.sin(angle);
+
+    const el = document.createElement("div");
+    el.className = "player" + (i === currentPlayer ? " active" : "");
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+    el.innerText = p;
+    table.appendChild(el);
+  });
+}
+
+/* ===== GAME LOGIC ===== */
+document.getElementById("draw-btn").onclick = () => {
+  // Christmas Miracle
+  if (Math.random() < 1/15) {
+    showCard("🎁", "CHRISTMAS MIRACLE! Last to shout MERRY CHRISTMAS drinks!");
+    nextTurn();
     return;
   }
 
   const card = cards[Math.floor(Math.random() * cards.length)];
-
-  handlePersistence(card);
+  handleSpecial(card);
   showCard(card.value, card.rule);
   renderActiveRules();
-}
+  nextTurn();
+};
 
-function handlePersistence(card) {
-  if (card.persistent === "silentNight") state.silentNight = !state.silentNight;
-  if (card.persistent === "christmasSpirit") state.christmasSpirit = !state.christmasSpirit;
-  if (card.persistent === "santaHelper") state.santaHelper = true;
-  if (card.persistent === "king") state.kings++;
+function handleSpecial(card) {
+  if (card.type === "silent") silentNight = silentNight === null ? players[currentPlayer] : null;
+  if (card.type === "spirit") christmasSpirit = christmasSpirit === null ? players[currentPlayer] : null;
 }
 
 function showCard(value, rule) {
+  const cardEl = document.getElementById("card");
   cardEl.classList.add("flip");
-
   setTimeout(() => {
-    cardEl.textContent = value;
-    cardEl.classList.remove("back");
-    ruleEl.innerHTML = rule;
+    cardEl.innerText = value;
+    document.getElementById("rule-text").innerText = rule;
   }, 300);
-
-  setTimeout(() => {
-    cardEl.classList.remove("flip");
-  }, 600);
+  setTimeout(() => cardEl.classList.remove("flip"), 600);
 }
 
 function renderActiveRules() {
   const rules = [];
+  if (silentNight) rules.push(`🌙 Silent Night — ${silentNight}`);
+  if (christmasSpirit) rules.push(`🎄 Christmas Spirit — ${christmasSpirit}`);
+  document.getElementById("active-rules").innerHTML =
+    rules.map(r => `<div class="active-rule">${r}</div>`).join("");
+}
 
-  if (state.silentNight) rules.push("🌙 Silent Night");
-  if (state.christmasSpirit) rules.push("🎄 Christmas Spirit");
-  if (state.santaHelper) rules.push("🎅 Santa’s Helper");
-  if (state.kings > 0) rules.push(`🥂 Kings drawn: ${state.kings}/4`);
-
-  activeRulesEl.innerHTML = rules
-    .map(r => `<div class="rule-active">${r}</div>`)
-    .join("");
+function nextTurn() {
+  currentPlayer = (currentPlayer + 1) % players.length;
+  renderPlayers();
 }
 </script>
 
