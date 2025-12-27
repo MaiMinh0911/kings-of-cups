@@ -19,6 +19,44 @@ body {
   text-align: center;
 }
 
+/* ===== RULE PANEL ===== */
+#rules-panel {
+  position: fixed;
+  left: -260px;
+  top: 0;
+  width: 260px;
+  height: 100%;
+  background: linear-gradient(#031a13, #0b3d2e);
+  padding: 20px;
+  transition: left 0.4s;
+  overflow-y: auto;
+  text-align: left;
+}
+#rules-panel.open {
+  left: 0;
+}
+#rules-panel h2 {
+  text-align: center;
+  color: gold;
+}
+.rule {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+/* ===== RULE BUTTON ===== */
+#rules-toggle {
+  position: fixed;
+  left: 10px;
+  top: 10px;
+  background: gold;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: bold;
+  z-index: 10;
+}
+
 /* ===== SETUP ===== */
 #setup {
   padding: 40px 20px;
@@ -108,13 +146,8 @@ button {
 #card.flip {
   transform: translate(-50%, -50%) rotateY(180deg);
 }
-.rank {
-  font-weight: bold;
-}
-.suit {
-  font-size: 3.6rem;
-  align-self: center;
-}
+.rank { font-weight: bold; }
+.suit { font-size: 3.6rem; align-self: center; }
 .red { color: #b11226; }
 
 /* ===== RULE TEXT ===== */
@@ -124,7 +157,7 @@ button {
   min-height: 120px;
 }
 
-/* ===== DECK COUNTER ===== */
+/* ===== DECK COUNT ===== */
 #deck-count {
   font-size: 1.1rem;
   opacity: 0.8;
@@ -133,6 +166,25 @@ button {
 </head>
 
 <body>
+
+<button id="rules-toggle" onclick="toggleRules()">📜 Rules</button>
+
+<div id="rules-panel">
+  <h2>🎄 Rules</h2>
+  <div class="rule"><b>A</b> – Jingle Bells (right sings, you drink)</div>
+  <div class="rule"><b>2</b> – Pick someone to drink</div>
+  <div class="rule"><b>3</b> – You drink</div>
+  <div class="rule"><b>4</b> – Silent Night (no talking)</div>
+  <div class="rule"><b>5</b> – Guys drink</div>
+  <div class="rule"><b>6</b> – Girls drink</div>
+  <div class="rule"><b>7</b> – Christmas Spirit (laugh = drink)</div>
+  <div class="rule"><b>8</b> – Mate</div>
+  <div class="rule"><b>9</b> – Rhyme</div>
+  <div class="rule"><b>10</b> – Categories</div>
+  <div class="rule"><b>J</b> – Naughty or Nice</div>
+  <div class="rule"><b>Q</b> – Santa’s Helper</div>
+  <div class="rule"><b>K</b> – Santa’s Cup</div>
+</div>
 
 <div id="setup">
   <h1>🎄 Kings of Cups</h1>
@@ -160,14 +212,18 @@ button {
 </div>
 
 <script>
-/* ===== GAME DATA ===== */
+/* ===== RULE PANEL ===== */
+function toggleRules() {
+  document.getElementById("rules-panel").classList.toggle("open");
+}
+
+/* ===== GAME LOGIC ===== */
 const suits = [
   { s: "♠", c: "black" },
   { s: "♣", c: "black" },
   { s: "♥", c: "red" },
   { s: "♦", c: "red" }
 ];
-
 const ranks = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
 
 const rules = {
@@ -182,7 +238,7 @@ const rules = {
   9: "🎤 Rhyme",
   10: "📚 Categories",
   J: "🎁 Naughty or Nice — Nice: give 2 | Naughty: drink 2",
-  Q: "🎅 Santa’s Helper — Drinks when you drink",
+  Q: "🎅 Santa’s Helper — Drinks whenever you drink",
   K: "🥂 Santa’s Cup — Pour in. Last King drinks + story"
 };
 
@@ -192,12 +248,11 @@ let currentPlayer = 0;
 let silentNight = null;
 let christmasSpirit = null;
 
-/* ===== SETUP ===== */
 function addPlayer() {
-  const input = document.getElementById("player-input");
-  if (!input.value.trim()) return;
-  players.push(input.value.trim());
-  input.value = "";
+  const i = document.getElementById("player-input");
+  if (!i.value.trim()) return;
+  players.push(i.value.trim());
+  i.value = "";
   document.getElementById("player-list").innerHTML = players.join("<br>");
 }
 
@@ -210,25 +265,12 @@ function startGame() {
   updateDeckCount();
 }
 
-/* ===== DECK ===== */
 function buildDeck() {
   deck = [];
-  for (let r of ranks) {
-    for (let s of suits) {
-      deck.push({ rank: r, suit: s });
-    }
-  }
-  shuffle(deck);
+  for (let r of ranks) for (let s of suits) deck.push({ rank: r, suit: s });
+  deck.sort(() => Math.random() - 0.5);
 }
 
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-
-/* ===== TABLE ===== */
 function renderPlayers() {
   const table = document.getElementById("table");
   table.querySelectorAll(".player").forEach(p => p.remove());
@@ -244,13 +286,8 @@ function renderPlayers() {
   });
 }
 
-/* ===== GAME ===== */
 function drawCard() {
-  if (deck.length === 0) {
-    buildDeck();
-    alert("Deck reshuffled!");
-  }
-
+  if (!deck.length) buildDeck();
   const card = deck.pop();
 
   if (card.rank === "4") silentNight = silentNight ? null : players[currentPlayer];
@@ -266,24 +303,24 @@ function drawCard() {
 }
 
 function showCard(card) {
-  const el = document.getElementById("card");
-  el.classList.add("flip");
+  const c = document.getElementById("card");
+  c.classList.add("flip");
   setTimeout(() => {
-    el.innerHTML = `
+    c.innerHTML = `
       <div class="rank ${card.suit.c}">${card.rank}</div>
       <div class="suit ${card.suit.c}">${card.suit.s}</div>
       <div class="rank ${card.suit.c}">${card.rank}</div>
     `;
   }, 300);
-  setTimeout(() => el.classList.remove("flip"), 600);
+  setTimeout(() => c.classList.remove("flip"), 600);
 }
 
 function renderActiveRules() {
-  const rulesEl = [];
-  if (silentNight) rulesEl.push(`🌙 Silent Night — ${silentNight}`);
-  if (christmasSpirit) rulesEl.push(`🎄 Christmas Spirit — ${christmasSpirit}`);
+  const list = [];
+  if (silentNight) list.push(`🌙 Silent Night — ${silentNight}`);
+  if (christmasSpirit) list.push(`🎄 Christmas Spirit — ${christmasSpirit}`);
   document.getElementById("active-rules").innerHTML =
-    rulesEl.map(r => `<div class="active-rule">${r}</div>`).join("");
+    list.map(r => `<div class="active-rule">${r}</div>`).join("");
 }
 
 function updateDeckCount() {
