@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Kings of Cups – Christmas Casino</title>
+<title>Kings of Cups – New Year’s Edition</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -12,8 +12,8 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at center, rgba(255,215,0,0.08), transparent 60%),
-    radial-gradient(circle at top, #0e4d3c, #02150f);
+    radial-gradient(circle at center, rgba(255,215,0,0.10), transparent 60%),
+    radial-gradient(circle at top, #1b0036, #05000d);
   font-family: Georgia, serif;
   color: white;
   text-align: center;
@@ -26,22 +26,18 @@ body {
   top: 0;
   width: 260px;
   height: 100%;
-  background: linear-gradient(#031a13, #0b3d2e);
-  padding: 20px;
+  background: linear-gradient(#05000d, #1b0036);
+  padding: 60px 20px 20px;
   transition: left 0.4s;
   overflow-y: auto;
   text-align: left;
+  z-index: 5;
 }
-#rules-panel.open {
-  left: 0;
-}
-#rules-panel h2 {
-  text-align: center;
-  color: gold;
-}
+#rules-panel.open { left: 0; }
+
 .rule {
-  margin-bottom: 10px;
-  font-size: 0.95rem;
+  margin-bottom: 12px;
+  font-size: 1rem;
 }
 
 /* ===== RULE BUTTON ===== */
@@ -61,15 +57,15 @@ body {
 #setup {
   padding: 40px 20px;
 }
-#setup h1 {
-  font-size: 2.8rem;
-}
+#setup h1 { font-size: 2.8rem; }
+
 input {
   font-size: 1.3rem;
   padding: 12px;
   border-radius: 10px;
   border: none;
 }
+
 button {
   margin: 12px;
   padding: 16px 36px;
@@ -88,16 +84,14 @@ button {
   position: fixed;
   top: 14px;
   right: 14px;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   text-align: right;
 }
 .active-rule {
   color: gold;
   animation: pulse 1.5s infinite;
 }
-@keyframes pulse {
-  50% { opacity: 0.6; }
-}
+@keyframes pulse { 50% { opacity: 0.6; } }
 
 /* ===== TABLE ===== */
 #table {
@@ -106,8 +100,8 @@ button {
   height: 420px;
   margin: 60px auto 20px;
   border-radius: 50%;
-  background: radial-gradient(circle, #0b3d2e, #031a13);
-  box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
+  background: radial-gradient(circle, #2a0052, #0b001a);
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.9);
 }
 
 /* ===== PLAYERS ===== */
@@ -115,7 +109,7 @@ button {
   position: absolute;
   transform: translate(-50%, -50%);
   padding: 6px 14px;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.55);
   border-radius: 16px;
   font-size: 1.2rem;
 }
@@ -132,7 +126,7 @@ button {
   width: 160px;
   height: 230px;
   transform: translate(-50%, -50%);
-  background: #fdfdfd;
+  background: #fff;
   border-radius: 18px;
   box-shadow: 0 18px 40px rgba(0,0,0,0.7);
   display: flex;
@@ -167,27 +161,26 @@ button {
 
 <body>
 
-<button id="rules-toggle" onclick="toggleRules()">📜 Rules</button>
+<button id="rules-toggle" onclick="toggleRules()">📜</button>
 
 <div id="rules-panel">
-  <h2>🎄 Rules</h2>
-  <div class="rule"><b>A</b> – Jingle Bells (right sings, you drink)</div>
-  <div class="rule"><b>2</b> – Pick someone to drink</div>
+  <div class="rule"><b>A</b> – Countdown Waterfall</div>
+  <div class="rule"><b>2</b> – Pick someone</div>
   <div class="rule"><b>3</b> – You drink</div>
-  <div class="rule"><b>4</b> – Silent Night (no talking)</div>
+  <div class="rule"><b>4</b> – Silent Mode</div>
   <div class="rule"><b>5</b> – Guys drink</div>
   <div class="rule"><b>6</b> – Girls drink</div>
-  <div class="rule"><b>7</b> – Christmas Spirit (laugh = drink)</div>
+  <div class="rule"><b>7</b> – Party Rule</div>
   <div class="rule"><b>8</b> – Mate</div>
   <div class="rule"><b>9</b> – Rhyme</div>
   <div class="rule"><b>10</b> – Categories</div>
-  <div class="rule"><b>J</b> – Naughty or Nice</div>
-  <div class="rule"><b>Q</b> – Santa’s Helper</div>
-  <div class="rule"><b>K</b> – Santa’s Cup</div>
+  <div class="rule"><b>J</b> – Never Have I Ever</div>
+  <div class="rule"><b>Q</b> – Question Master</div>
+  <div class="rule"><b>K</b> – King’s Cup</div>
 </div>
 
 <div id="setup">
-  <h1>🎄 Kings of Cups</h1>
+  <h1>🎆 Kings of Cups</h1>
   <input id="player-input" placeholder="Player name">
   <br>
   <button onclick="addPlayer()">Add Player</button>
@@ -200,9 +193,9 @@ button {
 
   <div id="table">
     <div id="card">
-      <div class="rank">🎄</div>
+      <div class="rank">🎆</div>
       <div class="suit">♠</div>
-      <div class="rank">🎄</div>
+      <div class="rank">🎆</div>
     </div>
   </div>
 
@@ -212,12 +205,10 @@ button {
 </div>
 
 <script>
-/* ===== RULE PANEL ===== */
 function toggleRules() {
   document.getElementById("rules-panel").classList.toggle("open");
 }
 
-/* ===== GAME LOGIC ===== */
 const suits = [
   { s: "♠", c: "black" },
   { s: "♣", c: "black" },
@@ -227,27 +218,30 @@ const suits = [
 const ranks = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
 
 const rules = {
-  A: "🎅 Person to your right sings Jingle Bells. You drink until they stop.",
-  2: "👉 Choose someone to drink",
+  A: "🎆 Countdown Waterfall",
+  2: "👉 Pick someone to drink",
   3: "🍺 You drink",
-  4: "🌙 Silent Night — No talking until NEXT 4",
+  4: "🤫 Silent Mode — No talking until next 4",
   5: "👨 Guys drink",
   6: "👩 Girls drink",
-  7: "🎄 Christmas Spirit — Laugh = drink",
-  8: "🤝 Mate — Pick a buddy",
+  7: "🎉 Party Rule — Make a rule",
+  8: "🤝 Mate",
   9: "🎤 Rhyme",
   10: "📚 Categories",
-  J: "🎁 Naughty or Nice — Nice: give 2 | Naughty: drink 2",
-  Q: "🎅 Santa’s Helper — Drinks whenever you drink",
-  K: "🥂 Santa’s Cup — Pour in. Last King drinks + story"
+  J: "🙈 Never Have I Ever",
+  Q: "❓ Question Master",
+  K: "🥂 King’s Cup"
 };
 
 let deck = [];
 let players = [];
 let currentPlayer = 0;
-let silentNight = null;
-let christmasSpirit = null;
 
+let silentMode = null;
+let partyRule = null;
+let questionMaster = null;
+
+/* ===== SETUP ===== */
 function addPlayer() {
   const i = document.getElementById("player-input");
   if (!i.value.trim()) return;
@@ -265,12 +259,14 @@ function startGame() {
   updateDeckCount();
 }
 
+/* ===== DECK ===== */
 function buildDeck() {
   deck = [];
   for (let r of ranks) for (let s of suits) deck.push({ rank: r, suit: s });
   deck.sort(() => Math.random() - 0.5);
 }
 
+/* ===== TABLE ===== */
 function renderPlayers() {
   const table = document.getElementById("table");
   table.querySelectorAll(".player").forEach(p => p.remove());
@@ -286,12 +282,14 @@ function renderPlayers() {
   });
 }
 
+/* ===== GAME ===== */
 function drawCard() {
   if (!deck.length) buildDeck();
   const card = deck.pop();
 
-  if (card.rank === "4") silentNight = silentNight ? null : players[currentPlayer];
-  if (card.rank === "7") christmasSpirit = christmasSpirit ? null : players[currentPlayer];
+  if (card.rank === "4") silentMode = silentMode ? null : players[currentPlayer];
+  if (card.rank === "7") partyRule = partyRule ? null : players[currentPlayer];
+  if (card.rank === "Q") questionMaster = players[currentPlayer];
 
   showCard(card);
   document.getElementById("rule-text").innerText = rules[card.rank];
@@ -317,8 +315,9 @@ function showCard(card) {
 
 function renderActiveRules() {
   const list = [];
-  if (silentNight) list.push(`🌙 Silent Night — ${silentNight}`);
-  if (christmasSpirit) list.push(`🎄 Christmas Spirit — ${christmasSpirit}`);
+  if (silentMode) list.push(`🤫 Silent Mode — ${silentMode}`);
+  if (partyRule) list.push(`🎉 Party Rule — ${partyRule}`);
+  if (questionMaster) list.push(`❓ Question Master — ${questionMaster}`);
   document.getElementById("active-rules").innerHTML =
     list.map(r => `<div class="active-rule">${r}</div>`).join("");
 }
